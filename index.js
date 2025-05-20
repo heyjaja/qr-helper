@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('copyFinalBtn').addEventListener('click', () => copyToClipboard('finalResult'));
     document.getElementById('copyYoutubeBtn').addEventListener('click', () => copyToClipboard('youtubeCode'));
     document.getElementById('clearAllBtn').addEventListener('click', clearAllFields);
+    document.getElementById('saveBtn').addEventListener('click', saveTxt);
 
     // 추가 이벤트 리스너
     document.getElementById('updateTitleBtn').addEventListener('click', updateGeneratedTitle);
@@ -147,4 +148,54 @@ function clearAllFields() {
 
     // 첫 번째 입력 필드에 포커스
     document.getElementById('pageNumber').focus();
+}
+
+function saveTxt() {
+    const finalResultElement = document.getElementById('finalResult');
+    const defaultTemplate = `?autoplay=1&mute=1
+
+리포트
+<iframe width="644" height="362"
+
+쇼츠
+<iframe width="362" height="644"
+
+QR링크
+https://youtu.be/주소
+
+*재생목록 공동체부 -> 사회
+정치, 사회 제외 모두 산업, 경제&금융2
+=================================================
+
+`
+
+    const finalResult =  defaultTemplate + finalResultElement.innerHTML;
+    const content = finalResult.replace(/<br>/g, '\n')
+
+    const filenameInputElem = document.getElementById('filenameInput');
+
+    // 파일 이름 가져오기
+    let filename = filenameInputElem.value.trim();
+    if (!filename) {
+        filename = 'report.txt';
+    } else if (!filename.toLowerCase().endsWith('.txt')) {
+        filename += '.txt';
+    }
+
+    // Blob 생성
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+
+    // 다운로드 링크 생성
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = filename;
+
+    // 다운로드 트리거
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // 클린업
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(downloadLink.href);
+
 }

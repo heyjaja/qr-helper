@@ -134,3 +134,14 @@ textarea {
 .copy-btn:hover {
     background-color: #0b7dda;
 }
+.actions {
+    margin: 20px 0;
+}
+
+.filename-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-size: 16px;
+}
