@@ -86,9 +86,6 @@ function generateFinalResult() {
 
     // 복사를 위한 원본 텍스트도 저장
     finalResultElement.setAttribute('data-text', result);
-
-    document.getElementById('newsInformation').textContent = `[${pageNumber}] ${generatedTitle}`;
-
 }
 
 function processYoutubeInput() {
