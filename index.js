@@ -78,7 +78,7 @@ function generateFinalResult() {
         .join(',');
 
     // 결과 조합 (라벨 없이 내용만, 줄바꿈 포함)
-    const result = `${pageNumber}\n\n${generatedTitle}\n\n${content}\n\n${hashtags}\n\n${keywords}`;
+    const result = `${pageNumber}\n\n${generatedTitle}\n\n${content}\n\n${hashtags}\n\n\n${keywords}`;
 
     // textContent는 줄바꿈이 제대로 표시되지 않으므로 innerHTML 사용
     const finalResultElement = document.getElementById('finalResult');
@@ -120,11 +120,12 @@ function copyToClipboard(elementId) {
 
     navigator.clipboard.writeText(text)
         .then(() => {
-            console.log('클립보드에 복사되었습니다!');
+            showToast('클립보드에 복사되었습니다', 'success');
         })
         .catch(err => {
             console.error('복사 실패:', err);
-            alert('복사에 실패했습니다. 직접 선택하여 복사해주세요.');
+            showToast('복사 실패', 'error');
+
         });
 }
 function clearAllFields() {
@@ -195,4 +196,43 @@ https://youtu.be/주소
     document.body.removeChild(downloadLink);
     URL.revokeObjectURL(downloadLink.href);
 
+}
+
+const toastContainer = document.getElementById('toastContainer');
+
+// 토스트 메시지 표시 함수
+function showToast(message, type = 'info', duration = 3000) {
+    // 토스트 요소 생성
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    // 아이콘 선택
+    let icon = '🔔';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'info') icon = 'ℹ️';
+
+    // 토스트 내용 구성
+    toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+    `;
+
+    // 토스트 컨테이너에 추가
+    toastContainer.appendChild(toast);
+
+    // 애니메이션을 위해 약간 지연 후 show 클래스 추가
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // 지정된 시간 후 토스트 제거
+    setTimeout(() => {
+        toast.classList.remove('show');
+
+        // 애니메이션 완료 후 요소 제거
+        setTimeout(() => {
+            toastContainer.removeChild(toast);
+        }, 300);
+    }, duration);
 }
