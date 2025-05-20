@@ -37,7 +37,7 @@ label {
     margin-bottom: 5px;
     font-weight: bold;
 }
-input, textarea, select {
+input[type=text], textarea, select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -191,4 +191,10 @@ textarea {
 
 .toast-message {
     flex-grow: 1;
+}
+
+.checkbox-label {
+    display: inline;
+    margin-bottom: 0;
+    font-weight: normal;
 }

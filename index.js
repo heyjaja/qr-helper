@@ -95,16 +95,22 @@ function processYoutubeInput() {
         return;
     }
 
+    const width = document.getElementById("youtubeWidth").value || 644;
+    const height = document.getElementById("youtubeHeight").value || 362;
+    const autoplay = document.getElementById("autoplay").checked;
+
     // width와 height 변경
     let processedCode = sourceCode
-        .replace(/width="[^"]*"/g, 'width="644"')
-        .replace(/height="[^"]*"/g, 'height="362"');
+        .replace(/width="[^"]*"/g, `width="${width}"`)
+        .replace(/height="[^"]*"/g, `height="${height}"`);
 
-    // src 속성에 autoplay=1&mute=1 파라미터 추가
-    processedCode = processedCode.replace(
-        /src="([^"?]*)((?:\?[^"]*)?)"/,
-        'src="$1?autoplay=1&mute=1"'
-    );
+    if(autoplay) {
+        // src 속성에 autoplay=1&mute=1 파라미터 추가
+        processedCode = processedCode.replace(
+            /src="([^"?]*)((?:\?[^"]*)?)"/,
+            'src="$1?autoplay=1&mute=1"'
+        );
+    }
 
     document.getElementById('youtubeCode').textContent = processedCode;
 
