@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('clearAllBtn').addEventListener('click', clearAllFields);
     document.getElementById('saveBtn').addEventListener('click', saveTxt);
 
+    document.getElementById('clearYoutubeBtn').addEventListener('click', () => clearFields('youtubeSourceInput'));
+
     // 추가 이벤트 리스너
     document.getElementById('updateTitleBtn').addEventListener('click', updateGeneratedTitle);
 
@@ -91,7 +93,7 @@ function generateFinalResult() {
 function processYoutubeInput() {
     const sourceCode = document.getElementById('youtubeSourceInput').value;
     if (!sourceCode) {
-        alert('유튜브 소스코드를 입력해주세요.');
+        showToast('유튜브 소스코드를 입력해주세요.', 'error');
         return;
     }
 
@@ -241,4 +243,9 @@ function showToast(message, type = 'info', duration = 3000) {
             toastContainer.removeChild(toast);
         }, 300);
     }, duration);
+}
+
+
+function clearFields(fieldsId) {
+    document.getElementById(fieldsId).value = '';
 }
