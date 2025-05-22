@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('clearAllBtn').addEventListener('click', clearAllFields);
     document.getElementById('saveBtn').addEventListener('click', saveTxt);
 
-    document.getElementById('clearYoutubeBtn').addEventListener('click', () => clearFields('youtubeSourceInput'));
+    document.getElementById('clearYoutubeBtn').addEventListener('click', clearYoutubeFields);
 
     // 추가 이벤트 리스너
     document.getElementById('updateTitleBtn').addEventListener('click', updateGeneratedTitle);
@@ -246,6 +246,8 @@ function showToast(message, type = 'info', duration = 3000) {
 }
 
 
-function clearFields(fieldsId) {
-    document.getElementById(fieldsId).value = '';
+function clearYoutubeFields() {
+    document.getElementById('youtubeSourceInput').value = '';
+    document.getElementById('youtubeCode').textContent = '';
+    document.getElementById('youtubePreview').innerHTML = '';
 }
