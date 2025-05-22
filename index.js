@@ -1,3 +1,47 @@
+function createDateStr() {
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${month}${day}`;
+}
+
+function createTitleSuffix(category) {
+    return `[말하는 기자들_${category}_${createDateStr()}]`;
+}
+
+function getAllTitleSuffix() {
+    const categories = ['공동체', '사회', '', '테크지식산업', '산업', '금융', '', '정치정책', '자본시장정책',];
+
+    // 각 카테고리에 대해 타이틀 접미사 생성 및 앞에 공백 추가
+    const titleSuffixes = categories.map(category => {
+        if(!category) return category;
+        return ` ${createTitleSuffix(category)}`;
+    });
+
+    // 줄바꿈으로 연결하여 하나의 문자열로 반환
+    return titleSuffixes.join('\n');
+
+}
+
+// default text
+const defaultTemplate = `?autoplay=1&mute=1
+
+리포트
+<iframe width="644" height="362"
+
+쇼츠
+<iframe width="362" height="644"
+
+QR링크
+https://youtu.be/주소
+
+${getAllTitleSuffix()}
+
+*재생목록 공동체부 -> 사회
+정치, 사회 제외 모두 산업, 경제&금융2
+=================================================
+`
+
 document.addEventListener('DOMContentLoaded', function() {
     // 현재 날짜 설정
     updateCurrentDate();
@@ -38,22 +82,15 @@ function updateCurrentDate() {
     document.getElementById('currentDate').textContent = `오늘 날짜: ${now.getFullYear()}년 ${month}월 ${day}일 (${formattedDate})`;
 }
 
+
 function updateGeneratedTitle() {
     const title = document.getElementById('newsTitle').value;
     const category = document.getElementById('category').value;
     let generatedTitle = '';
 
     if (title && category) {
-        const now = new Date();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const dateStr = `${month}${day}`;
-
         // 카테고리별 접두사 설정
-        let prefix = '';
-        prefix = `[말하는 기자들_${category}_${dateStr}]`;
-
-        generatedTitle = `${title} ${prefix}`;
+        generatedTitle = `${title} ${createTitleSuffix(category)}`;
     }
 
     document.getElementById('generatedTitle').textContent = generatedTitle;
@@ -63,6 +100,10 @@ function generateFinalResult() {
     const pageNumber = document.getElementById('pageNumber').value;
     const generatedTitle = document.getElementById('generatedTitle').textContent;
     const content = document.getElementById('newsContent').value;
+    const author = document.getElementById('author').value;
+    const filename = document.getElementById('filenameInput');
+
+    filename.value = author ? `${author}.txt` : filename.value;
 
     // 해시태그 생성
     const hashtagsInput = document.getElementById('hashtags').value;
@@ -80,11 +121,11 @@ function generateFinalResult() {
         .join(',');
 
     // 결과 조합 (라벨 없이 내용만, 줄바꿈 포함)
-    const result = `${pageNumber}\n\n${generatedTitle}\n\n${content}\n\n${hashtags}\n\n\n${keywords}`;
+    const result = defaultTemplate + `\n\n${pageNumber}\n\n${generatedTitle}\n\n${content}\n\n${hashtags}\n\n\n${keywords}`;
 
     // textContent는 줄바꿈이 제대로 표시되지 않으므로 innerHTML 사용
     const finalResultElement = document.getElementById('finalResult');
-    finalResultElement.innerHTML = result.replace(/\n/g, '<br>');
+    finalResultElement.textContent = result;
 
     // 복사를 위한 원본 텍스트도 저장
     finalResultElement.setAttribute('data-text', result);
@@ -158,25 +199,8 @@ function clearAllFields() {
 
 function saveTxt() {
     const finalResultElement = document.getElementById('finalResult');
-    const defaultTemplate = `?autoplay=1&mute=1
 
-리포트
-<iframe width="644" height="362"
-
-쇼츠
-<iframe width="362" height="644"
-
-QR링크
-https://youtu.be/주소
-
-*재생목록 공동체부 -> 사회
-정치, 사회 제외 모두 산업, 경제&금융2
-=================================================
-
-`
-
-    const finalResult =  defaultTemplate + finalResultElement.innerHTML;
-    const content = finalResult.replace(/<br>/g, '\n')
+    const content =  finalResultElement.textContent;
 
     const filenameInputElem = document.getElementById('filenameInput');
 
